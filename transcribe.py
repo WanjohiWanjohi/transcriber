@@ -20,6 +20,36 @@ def get_url(token , data):
 
     def get_transcribe_id(token, url):
         '''
+        Parameter:
+        token:The API Key
+        url: Url to uploaded file
+        Return Value:
+        id: The transcribe id of the file
         '''
+        endpoint = 'https://api.assemblyai.com/v2/transcript'
+        json = {
+            'audio_url':url
+        }
+        headers = {
+            "authorization":token, 
+            "content-type":'application/json'
+        }
+        response = requests.post(endpoint , json=json , headers=headers)
+        id = response.json()['id']
+        print("Made request and file is currently queued")
+        return id
 
-        pass
+    def get_text(token , transcribe_id):
+        '''
+        Parameter:
+        token: The API Key
+        transcribe_id: The ID of the file to be transcribed
+        Return Value:
+        result: The response object in JSON format
+        '''
+        endpoint = f"https://api.assemblyai.com/v2/transcript/{transcribe_id}"
+        headers = {
+            "authorization": token
+        }
+        result = requests.get(endpoint ,headers=headers).json()
+        return result
